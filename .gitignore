@@ -1,0 +1,33 @@
+# ── Claude Code internal ──────────────────────────────
+.claude/
+.github/
+
+# ── Java / Maven ──────────────────────────────────────
+backend/target/
+backend/*.jar
+backend/*.war
+!backend/.mvn/wrapper/maven-wrapper.jar
+
+# ── Node / React ──────────────────────────────────────
+frontend/node_modules/
+frontend/build/
+frontend/.env
+frontend/.env.local
+frontend/.env.*.local
+frontend/npm-debug.log*
+
+# ── Uploads (gerados em runtime) ──────────────────────
+backend/uploads/
+
+# ── Scripts auxiliares ────────────────────────────────
+gerar_pdf_requisitos.py
+gerar_roteiro.js
+
+# ── IDEs ──────────────────────────────────────────────
+.idea/
+*.iml
+*.xml.bak
+
+# ── OS ────────────────────────────────────────────────
+.DS_Store
+Thumbs.db

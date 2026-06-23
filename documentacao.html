@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AutoTrack BR — Documentação Técnica</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap');
+
+  :root {
+    --primary: #4a4a8a;
+    --dark: #1a1a2e;
+    --accent: #6c63ff;
+    --green: #16a34a;
+    --border: #e2e8f0;
+    --bg-code: #f8f9fc;
+    --text: #1e293b;
+    --muted: #64748b;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    color: var(--text);
+    font-size: 13.5px;
+    line-height: 1.7;
+    background: #fff;
+  }
+
+  /* ── CAPA ── */
+  .cover {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 80px;
+    background: linear-gradient(135deg, #1a1a2e 0%, #4a4a8a 100%);
+    color: #fff;
+    page-break-after: always;
+  }
+  .cover-tag {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 24px;
+  }
+  .cover-title {
+    font-size: 52px;
+    font-weight: 800;
+    letter-spacing: -1.5px;
+    line-height: 1.1;
+    margin-bottom: 16px;
+  }
+  .cover-sub {
+    font-size: 20px;
+    color: rgba(255,255,255,0.65);
+    font-weight: 400;
+    margin-bottom: 48px;
+  }
+  .cover-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 13px;
+    color: rgba(255,255,255,0.5);
+  }
+  .cover-meta strong { color: rgba(255,255,255,0.85); font-weight: 600; }
+  .cover-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 100px;
+    padding: 6px 16px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-top: 40px;
+    width: fit-content;
+  }
+
+  /* ── SUMÁRIO ── */
+  .toc-page {
+    padding: 64px 80px;
+    page-break-after: always;
+  }
+  .toc-title {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 32px;
+  }
+  .toc-item {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .toc-num {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--primary);
+    min-width: 28px;
+  }
+  .toc-label { font-weight: 500; font-size: 14px; }
+  .toc-dots {
+    flex: 1;
+    border-bottom: 1px dotted var(--border);
+    margin: 0 8px;
+    position: relative;
+    bottom: 3px;
+  }
+  .toc-desc { font-size: 12px; color: var(--muted); }
+
+  /* ── SEÇÕES ── */
+  .section {
+    padding: 64px 80px;
+    page-break-before: always;
+  }
+  .section-num {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--primary);
+    margin-bottom: 8px;
+  }
+  .section-title {
+    font-size: 32px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    color: var(--dark);
+    margin-bottom: 8px;
+    line-height: 1.2;
+  }
+  .section-sub {
+    font-size: 15px;
+    color: var(--muted);
+    margin-bottom: 36px;
+    padding-bottom: 24px;
+    border-bottom: 2px solid var(--border);
+  }
+
+  h3 {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--dark);
+    margin: 28px 0 12px;
+  }
+  p { margin-bottom: 12px; }
+  ul, ol { padding-left: 20px; margin-bottom: 12px; }
+  li { margin-bottom: 4px; }
+
+  /* ── CÓDIGO ── */
+  pre {
+    background: var(--bg-code);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--primary);
+    border-radius: 8px;
+    padding: 18px 20px;
+    font-family: 'JetBrains Mono', 'Courier New', monospace;
+    font-size: 12px;
+    line-height: 1.6;
+    overflow: auto;
+    margin: 12px 0 20px;
+    white-space: pre;
+  }
+  code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    background: var(--bg-code);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1px 6px;
+  }
+
+  /* ── BADGES ── */
+  .badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 100px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+  }
+  .badge-ok  { background: #dcfce7; color: #15803d; }
+  .badge-parcial { background: #fef9c3; color: #92400e; }
+  .badge-level { background: #ede9fe; color: #5b21b6; }
+
+  /* ── REQUIREMENT TABLE ── */
+  .req-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0 24px;
+    font-size: 13px;
+  }
+  .req-table th {
+    background: var(--dark);
+    color: #fff;
+    padding: 10px 14px;
+    text-align: left;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+  .req-table td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  .req-table tr:nth-child(even) td { background: #f8fafc; }
+
+  /* ── INFO BOX ── */
+  .infobox {
+    background: #f0f4ff;
+    border-left: 4px solid var(--primary);
+    border-radius: 0 8px 8px 0;
+    padding: 14px 18px;
+    margin: 16px 0;
+    font-size: 13px;
+  }
+  .infobox.green { background: #f0fdf4; border-color: var(--green); }
+  .infobox strong { display: block; margin-bottom: 4px; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--primary); }
+  .infobox.green strong { color: var(--green); }
+
+  /* ── MATURITY LEVELS ── */
+  .level-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin: 16px 0;
+  }
+  .level-card {
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+    text-align: center;
+  }
+  .level-card.active {
+    border-color: var(--primary);
+    background: #f0f4ff;
+  }
+  .level-num { font-size: 28px; font-weight: 800; color: var(--muted); }
+  .level-card.active .level-num { color: var(--primary); }
+  .level-name { font-size: 12px; font-weight: 600; margin-top: 4px; }
+  .level-desc { font-size: 11px; color: var(--muted); margin-top: 6px; }
+
+  /* ── ENDPOINT TABLE ── */
+  .ep { font-size: 12px; }
+  .ep-method {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 700;
+    font-family: monospace;
+  }
+  .get  { background: #dcfce7; color: #166534; }
+  .post { background: #dbeafe; color: #1e40af; }
+  .put  { background: #fef9c3; color: #854d0e; }
+  .del  { background: #fee2e2; color: #991b1b; }
+
+  .footer {
+    padding: 32px 80px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 40px;
+  }
+
+  @media print {
+    body { font-size: 12px; }
+    .cover { height: 100vh; }
+    .section { page-break-before: always; }
+    pre { page-break-inside: avoid; }
+    .level-grid { page-break-inside: avoid; }
+    .req-table { page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════
+     CAPA
+════════════════════════════════════════════════ -->
+<div class="cover">
+  <p class="cover-tag">Documentação Técnica · Projeto Acadêmico</p>
+  <h1 class="cover-title">AutoTrack BR</h1>
+  <p class="cover-sub">Sistema de Histórico Veicular Brasileiro</p>
+  <div class="cover-meta">
+    <p><strong>Stack:</strong> Java 21 · Spring Boot 3.3.5 · MySQL 8 · React 19</p>
+    <p><strong>Arquitetura:</strong> REST API + SPA (Single Page Application)</p>
+    <p><strong>Segurança:</strong> JWT Stateless (Spring Security)</p>
+    <p><strong>Data:</strong> Junho de 2026</p>
+  </div>
+  <div class="cover-badge">🚗 Inspirado no CarVertical — adaptado à realidade brasileira</div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     SUMÁRIO
+════════════════════════════════════════════════ -->
+<div class="toc-page">
+  <p class="toc-title">Sumário</p>
+
+  <div class="toc-item">
+    <span class="toc-num">01</span>
+    <span class="toc-label">Visão Geral do Projeto</span>
+    <span class="toc-dots"></span>
+    <span class="toc-desc">Conceito, comparativo com CarVertical</span>
+  </div>
+  <div class="toc-item">
+    <span class="toc-num">02</span>
+    <span class="toc-label">Frontend — React + Node.js</span>
+    <span class="toc-dots"></span>
+    <span class="toc-desc">SPA, componentes, autenticação no cliente</span>
+  </div>
+  <div class="toc-item">
+    <span class="toc-num">03</span>
+    <span class="toc-label">Backend — Spring Boot + Java</span>
+    <span class="toc-dots"></span>
+    <span class="toc-desc">Estrutura em camadas, configuração, segurança JWT</span>
+  </div>
+  <div class="toc-item">
+    <span class="toc-num">04</span>
+    <span class="toc-label">Banco de Dados MySQL + Flyway</span>
+    <span class="toc-dots"></span>
+    <span class="toc-desc">Schema, migrations versionadas, relacionamentos</span>
+  </div>
+  <div class="toc-item">
+    <span class="toc-num">05</span>
+    <span class="toc-label">Repositórios — Spring Data JPA</span>
+    <span class="toc-dots"></span>
+    <span class="toc-desc">Interfaces de acesso ao banco de dados</span>
+  </div>
+  <div class="toc-item">
+    <span class="toc-num">06</span>
+    <span class="toc-label">Camada de Serviços</span>
+    <span class="toc-dots"></span>
+    <span class="toc-desc">Regras de negócio, VehicleService, FipeService</span>
+  </div>
+  <div class="toc-item">
+    <span class="toc-num">07</span>
+    <span class="toc-label">Métodos HTTP — GET, POST, PUT, DELETE</span>
+    <span class="toc-dots"></span>
+    <span class="toc-desc">Controllers REST, endpoints documentados</span>
+  </div>
+  <div class="toc-item">
+    <span class="toc-num">08</span>
+    <span class="toc-label">OAS — Swagger / OpenAPI</span>
+    <span class="toc-dots"></span>
+    <span class="toc-desc">Documentação automática dos endpoints</span>
+  </div>
+  <div class="toc-item">
+    <span class="toc-num">09</span>
+    <span class="toc-label">Maturidade RESTful — Richardson Model</span>
+    <span class="toc-dots"></span>
+    <span class="toc-desc">Níveis 0–3, onde o projeto se posiciona</span>
+  </div>
+  <div class="toc-item">
+    <span class="toc-num">10</span>
+    <span class="toc-label">Integração Externa — Tabela FIPE</span>
+    <span class="toc-dots"></span>
+    <span class="toc-desc">Proxy Spring, cache, dados de mercado</span>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     01 — VISÃO GERAL
+════════════════════════════════════════════════ -->
+<div class="section">
+  <p class="section-num">01 — Visão Geral</p>
+  <h1 class="section-title">O Projeto AutoTrack BR</h1>
+  <p class="section-sub">Sistema de histórico veicular inspirado no CarVertical europeu, adaptado ao contexto brasileiro.</p>
+
+  <p>O <strong>AutoTrack BR</strong> é um sistema web completo para registro e consulta de histórico veicular. Qualquer usuário pode pesquisar um veículo pela placa e visualizar eventos como acidentes, roubos, leilões e manutenções, além de ver o preço de mercado atualizado pela Tabela FIPE.</p>
+
+  <h3>Comparativo com o CarVertical</h3>
+  <table class="req-table">
+    <thead>
+      <tr>
+        <th>Funcionalidade</th>
+        <th>CarVertical (Europa)</th>
+        <th>AutoTrack BR</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Busca por placa</td>
+        <td>✅ Via APIs europeias</td>
+        <td>✅ Implementado</td>
+      </tr>
+      <tr>
+        <td>Histórico de acidentes</td>
+        <td>✅ Automático (seguradoras)</td>
+        <td>✅ Registro manual/importado</td>
+      </tr>
+      <tr>
+        <td>Registro de roubo/furto</td>
+        <td>✅ Via INTERPOL / polícia</td>
+        <td>✅ Registro com status STOLEN</td>
+      </tr>
+      <tr>
+        <td>Histórico de leilão</td>
+        <td>✅ Integrado</td>
+        <td>✅ Registro com status AUCTION</td>
+      </tr>
+      <tr>
+        <td>Preço de mercado</td>
+        <td>✅ Via Eurotax</td>
+        <td>✅ Via Tabela FIPE (API oficial)</td>
+      </tr>
+      <tr>
+        <td>Fotos do veículo</td>
+        <td>✅</td>
+        <td>✅ Upload e galeria implementados</td>
+      </tr>
+      <tr>
+        <td>API de seguradoras</td>
+        <td>✅ (dados públicos europeus)</td>
+        <td>⚠️ Não disponível publicamente no Brasil</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="infobox">
+    <strong>Nota sobre dados públicos no Brasil</strong>
+    No Brasil, o DETRAN e as seguradoras não disponibilizam APIs públicas de consulta. A solução adotada foi integrar a <strong>Tabela FIPE</strong> (fonte oficial de preços de mercado do governo brasileiro) e permitir o registro manual de eventos com rastreabilidade de fonte.
+  </div>
+
+  <h3>Requisitos Atendidos</h3>
+  <table class="req-table">
+    <thead>
+      <tr><th>Requisito Original</th><th>Status</th><th>Como foi implementado</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>App de histórico veicular</td><td><span class="badge badge-ok">✅ Atendido</span></td><td>Busca por placa, eventos, fotos, status</td></tr>
+      <tr><td>Front em Node.js</td><td><span class="badge badge-ok">✅ Atendido</span></td><td>React 19 (Create React App, roda em Node.js)</td></tr>
+      <tr><td>Back-end Spring / Java</td><td><span class="badge badge-ok">✅ Atendido</span></td><td>Spring Boot 3.3.5, Java 21</td></tr>
+      <tr><td>MySQL + Banco de Dados</td><td><span class="badge badge-ok">✅ Atendido</span></td><td>MySQL 8, Flyway migrations</td></tr>
+      <tr><td>Repositório / Serviços</td><td><span class="badge badge-ok">✅ Atendido</span></td><td>Spring Data JPA + Service Layer</td></tr>
+      <tr><td>GET, POST, PUT, DELETE</td><td><span class="badge badge-ok">✅ Atendido</span></td><td>CRUD completo em 4 controllers</td></tr>
+      <tr><td>OAS / Swagger</td><td><span class="badge badge-ok">✅ Atendido</span></td><td>Springdoc em /swagger-ui.html</td></tr>
+      <tr><td>Maturidade RESTful</td><td><span class="badge badge-ok">✅ Nível 2</span></td><td>Resources + HTTP Verbs + Status Codes</td></tr>
+      <tr><td>Integração externa</td><td><span class="badge badge-parcial">⚠️ Parcial</span></td><td>FIPE (preço), sem API pública de seguro no BR</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     02 — FRONTEND
+════════════════════════════════════════════════ -->
+<div class="section">
+  <p class="section-num">02 — Frontend</p>
+  <h1 class="section-title">React 19 + Node.js</h1>
+  <p class="section-sub">Single Page Application com autenticação JWT no cliente e comunicação via Axios.</p>
+
+  <p>O frontend foi desenvolvido com <strong>React 19</strong> utilizando o <strong>Create React App</strong>, que utiliza Node.js como ambiente de desenvolvimento e build. A aplicação é uma SPA (Single Page Application) — toda a navegação acontece no cliente sem recarregamentos de página.</p>
+
+  <h3>Estrutura de Componentes</h3>
+  <pre>frontend/src/
+├── App.js               ← Componente raiz, gerencia estado e tabs
+├── App.css              ← Estilos globais com CSS variables
+├── api.js               ← Instância Axios com interceptors JWT
+├── LandingPage.js       ← Página pública de entrada
+└── components/
+    ├── Toast.js         ← Notificações temporárias (hook + componente)
+    ├── PhotoLightbox.js ← Visualizador de fotos em tela cheia
+    └── FipeSearch.js    ← Consulta cascata na Tabela FIPE</pre>
+
+  <h3>Configuração do Cliente HTTP (api.js)</h3>
+  <p>Toda comunicação com o backend passa pela instância Axios configurada em <code>api.js</code>, que injeta automaticamente o token JWT em cada requisição e trata erros de autenticação:</p>
+  <pre>import axios from 'axios';
+
+export const BASE_URL = (process.env.REACT_APP_API_URL || 'http://localhost:8080/api/v1')
+  .replace(/\/api\/v1$/, '');
+
+const api = axios.create({ baseURL: `${BASE_URL}/api/v1` });
+
+// Interceptor de requisição: injeta token JWT
+api.interceptors.request.use(config => {
+  const token = localStorage.getItem('token');
+  if (token) config.headers.Authorization = `Bearer ${token}`;
+  return config;
+});
+
+// Interceptor de resposta: trata token expirado (401)
+api.interceptors.response.use(
+  response => response,
+  error => {
+    if (error.response?.status === 401) {
+      localStorage.removeItem('token');
+      window.location.reload();   // redireciona para login
+    }
+    return Promise.reject(error);
+  }
+);</pre>
+
+  <h3>Gerenciamento de Estado</h3>
+  <p>O estado da aplicação é gerenciado pelo React Hooks (<code>useState</code>, <code>useEffect</code>) no componente <code>App.js</code>. A navegação entre telas é controlada por um estado <code>tab</code>, sem uso de React Router:</p>
+  <pre>// Tabs principais
+const [tab, setTab] = useState('list');     // 'search' | 'register' | 'list'
+
+// Tabs contextuais (abertas ao selecionar um veículo)
+const [selectedVehicle, setSelectedVehicle] = useState(null);  // abre tab 'history'
+const [editForm, setEditForm] = useState(null);                 // abre tab 'edit'
+
+// Autenticação
+const [user, setUser] = useState(null);     // null = não logado</pre>
+
+  <div class="infobox green">
+    <strong>Por que React e não Vue ou Angular?</strong>
+    React é a biblioteca frontend mais adotada no mercado brasileiro. O Create React App (Node.js) fornece o ambiente completo: servidor de desenvolvimento, bundler Webpack, transpilador Babel e suporte a TypeScript. O requisito "front em Node.js" é satisfeito, pois toda a toolchain React roda em Node.js.
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     03 — BACKEND
+════════════════════════════════════════════════ -->
+<div class="section">
+  <p class="section-num">03 — Backend</p>
+  <h1 class="section-title">Spring Boot 3.3.5 + Java 21</h1>
+  <p class="section-sub">API REST em camadas com autenticação JWT stateless via Spring Security.</p>
+
+  <h3>Estrutura de Pacotes</h3>
+  <pre>backend/src/main/java/br/com/autotrack/backend/
+├── config/
+│   ├── SecurityConfig.java    ← Spring Security, CORS, JWT filter
+│   ├── JwtFilter.java         ← Intercepta requests e valida token
+│   └── JwtService.java        ← Geração e validação de tokens JWT
+├── controller/
+│   ├── AuthController.java    ← /auth/register, /auth/login
+│   ├── VehicleController.java ← CRUD de veículos
+│   ├── VehicleHistoryController.java
+│   ├── PhotoController.java
+│   └── FipeController.java    ← Proxy para a API da FIPE
+├── service/
+│   ├── AuthService.java
+│   ├── VehicleService.java
+│   ├── VehicleHistoryService.java
+│   ├── PhotoService.java
+│   └── FipeService.java
+├── repository/                ← Interfaces Spring Data JPA
+├── model/                     ← Entidades JPA
+├── dto/                       ← Data Transfer Objects
+└── exception/                 ← Tratamento global de erros</pre>
+
+  <h3>Configuração de Segurança (SecurityConfig.java)</h3>
+  <p>A segurança é configurada como <strong>stateless</strong> — nenhuma sessão é mantida no servidor. Cada requisição deve apresentar um JWT válido no header <code>Authorization</code>:</p>
+  <pre>@Bean
+public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    http
+      .csrf(csrf -> csrf.disable())
+      .cors(Customizer.withDefaults())
+      .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+      .authorizeHttpRequests(auth -> auth
+          .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+          .requestMatchers("/api/v1/auth/**").permitAll()           // login/registro público
+          .requestMatchers(HttpMethod.GET, "/api/v1/photos/**").permitAll()
+          .requestMatchers("/swagger-ui.html", "/swagger-ui/**").permitAll()
+          .anyRequest().authenticated()                             // todo o resto exige JWT
+      )
+      .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+    return http.build();
+}</pre>
+
+  <h3>Modelo de Resposta de Autenticação</h3>
+  <pre>// POST /api/v1/auth/login → retorna:
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "email": "usuario@email.com",
+  "role": "USER"
+}</pre>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     04 — BANCO DE DADOS
+════════════════════════════════════════════════ -->
+<div class="section">
+  <p class="section-num">04 — Banco de Dados</p>
+  <h1 class="section-title">MySQL 8 + Flyway Migrations</h1>
+  <p class="section-sub">Schema versionado com migrations automáticas — o banco evolui junto com o código.</p>
+
+  <p>O banco de dados é gerenciado pelo <strong>Flyway</strong>, uma ferramenta de migração de banco que aplica automaticamente os scripts SQL em ordem ao iniciar a aplicação. Isso garante que qualquer desenvolvedor que clonar o projeto terá o banco na versão correta.</p>
+
+  <h3>Histórico de Migrations</h3>
+  <table class="req-table">
+    <thead><tr><th>Versão</th><th>Arquivo</th><th>O que cria/altera</th></tr></thead>
+    <tbody>
+      <tr><td>V1</td><td>V1__create_users.sql</td><td>Tabela <code>users</code> (id, email, password, role)</td></tr>
+      <tr><td>V2</td><td>V2__create_vehicles.sql</td><td>Tabela <code>vehicles</code> com todos os campos</td></tr>
+      <tr><td>V3</td><td>V3__create_vehicle_history.sql</td><td>Tabela <code>vehicle_history</code> (eventos)</td></tr>
+      <tr><td>V4</td><td>V4__add_fipe_fields.sql</td><td>Colunas FIPE na tabela <code>vehicles</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3>Schema Principal — Tabela vehicles</h3>
+  <pre>CREATE TABLE vehicles (
+    id             BIGINT AUTO_INCREMENT PRIMARY KEY,
+    plate          VARCHAR(8)  NOT NULL UNIQUE,   -- placa do veículo
+    vin            VARCHAR(17) UNIQUE,             -- chassi (opcional)
+    brand          VARCHAR(255) NOT NULL,
+    model          VARCHAR(255) NOT NULL,
+    year           INT          NOT NULL,
+    color          VARCHAR(100),
+    fuel_type      VARCHAR(50),
+    mileage        INT,
+    notes          TEXT,
+    status         ENUM('REGULAR','STOLEN','AUCTION','SALVAGE') DEFAULT 'REGULAR',
+    fipe_code      VARCHAR(15),                   -- código FIPE (ex: 005004-2)
+    fipe_price     VARCHAR(25),                   -- preço (ex: R$ 45.000,00)
+    fipe_reference VARCHAR(40),                   -- mês de referência
+    created_at     DATETIME,
+    updated_at     DATETIME
+);</pre>
+
+  <h3>Relacionamentos</h3>
+  <pre>vehicles (1) ──── (N) vehicle_history   -- um veículo tem muitos eventos
+vehicles (1) ──── (N) vehicle_photos    -- um veículo tem muitas fotos
+users    (1) ──── autenticação JWT      -- sem FK, segurança stateless</pre>
+
+  <h3>Configuração (application.properties)</h3>
+  <pre>spring.datasource.url=jdbc:mysql://localhost:3306/autotrack_db
+spring.datasource.username=root
+spring.datasource.password=sua_senha
+spring.jpa.hibernate.ddl-auto=validate          # Flyway controla o DDL
+spring.flyway.baseline-on-migrate=true
+spring.flyway.locations=classpath:db/migration</pre>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     05 — REPOSITÓRIOS
+════════════════════════════════════════════════ -->
+<div class="section">
+  <p class="section-num">05 — Repositórios</p>
+  <h1 class="section-title">Spring Data JPA</h1>
+  <p class="section-sub">Interfaces de acesso ao banco — sem SQL manual, geração automática de queries.</p>
+
+  <p>O Spring Data JPA elimina a necessidade de escrever código JDBC ou SQL na maioria dos casos. Basta declarar uma interface que estende <code>JpaRepository</code> e o Spring gera a implementação automaticamente em tempo de execução.</p>
+
+  <h3>VehicleRepository</h3>
+  <pre>@Repository
+public interface VehicleRepository extends JpaRepository&lt;Vehicle, Long&gt; {
+
+    // Spring gera: SELECT * FROM vehicles WHERE plate = ?
+    Optional&lt;Vehicle&gt; findByPlate(String plate);
+
+    // Spring gera: SELECT * FROM vehicles WHERE vin = ?
+    Optional&lt;Vehicle&gt; findByVin(String vin);
+
+    // Spring gera: SELECT COUNT(*) > 0 FROM vehicles WHERE plate = ?
+    boolean existsByPlate(String plate);
+}</pre>
+
+  <h3>VehicleHistoryRepository</h3>
+  <pre>@Repository
+public interface VehicleHistoryRepository extends JpaRepository&lt;VehicleHistory, Long&gt; {
+
+    // Busca todos os eventos de um veículo, ordenados por data decrescente
+    List&lt;VehicleHistory&gt; findByVehicleIdOrderByEventDateDesc(Long vehicleId);
+}</pre>
+
+  <h3>O que o JpaRepository fornece gratuitamente</h3>
+  <table class="req-table">
+    <thead><tr><th>Método</th><th>Equivalente SQL</th></tr></thead>
+    <tbody>
+      <tr><td><code>findAll()</code></td><td>SELECT * FROM tabela</td></tr>
+      <tr><td><code>findById(id)</code></td><td>SELECT * FROM tabela WHERE id = ?</td></tr>
+      <tr><td><code>save(entity)</code></td><td>INSERT ou UPDATE automático</td></tr>
+      <tr><td><code>deleteById(id)</code></td><td>DELETE FROM tabela WHERE id = ?</td></tr>
+      <tr><td><code>existsById(id)</code></td><td>SELECT COUNT(*) FROM tabela WHERE id = ?</td></tr>
+      <tr><td><code>count()</code></td><td>SELECT COUNT(*) FROM tabela</td></tr>
+    </tbody>
+  </table>
+
+  <div class="infobox">
+    <strong>Padrão Repository</strong>
+    O repositório é a camada que isola o acesso ao banco de dados. Os Services nunca falam diretamente com o banco — eles usam os repositórios. Isso facilita testes (pode-se trocar o banco por um mock) e mantém o código organizado.
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     06 — SERVIÇOS
+════════════════════════════════════════════════ -->
+<div class="section">
+  <p class="section-num">06 — Camada de Serviços</p>
+  <h1 class="section-title">Business Logic Layer</h1>
+  <p class="section-sub">Regras de negócio separadas dos controllers e dos repositórios.</p>
+
+  <p>Os Services são responsáveis pelas regras de negócio da aplicação. Eles recebem chamadas dos Controllers, aplicam validações e lógica, e usam os Repositories para persistir ou consultar dados.</p>
+
+  <h3>VehicleService — Regras de Negócio</h3>
+  <pre>@Service
+@RequiredArgsConstructor
+public class VehicleService {
+
+    private final VehicleRepository vehicleRepository;
+
+    public VehicleResponseDTO create(VehicleRequestDTO dto) {
+        // REGRA: placa não pode ser duplicada
+        if (vehicleRepository.existsByPlate(dto.getPlate().toUpperCase())) {
+            throw new BusinessException("Placa já cadastrada: " + dto.getPlate());
+        }
+
+        Vehicle vehicle = Vehicle.builder()
+            .plate(dto.getPlate().toUpperCase())    // REGRA: placa sempre em maiúsculas
+            .brand(dto.getBrand())
+            .model(dto.getModel())
+            .year(dto.getYear())
+            .status(dto.getStatus() != null ? dto.getStatus() : VehicleStatus.REGULAR)
+            .fipeCode(dto.getFipeCode())
+            .fipePrice(dto.getFipePrice())
+            .fipeReference(dto.getFipeReference())
+            .build();
+
+        return toDTO(vehicleRepository.save(vehicle));
+    }
+}</pre>
+
+  <h3>FipeService — Integração com API Externa</h3>
+  <p>O <code>FipeService</code> atua como proxy entre o frontend e a API da FIPE, resolvendo o problema de CORS (a API da FIPE não permite chamadas diretas do browser). Inclui cache de 12 horas para o código de referência mensal:</p>
+  <pre>@Service
+public class FipeService {
+
+    private Integer cachedRefCode;       // cache do código de referência mensal
+    private LocalDateTime cacheTime;
+
+    private Integer getRefCode() {
+        // Reutiliza o código por 12 horas — ele muda apenas mensalmente
+        if (cachedRefCode == null || cacheTime.plusHours(12).isBefore(LocalDateTime.now())) {
+            // busca o código atual na API FIPE
+            cachedRefCode = buscarCodigoAtual();
+            cacheTime = LocalDateTime.now();
+        }
+        return cachedRefCode;
+    }
+
+    public List&lt;Map&lt;String, Object&gt;&gt; getMarcas(int tipo) {
+        MultiValueMap&lt;String, String&gt; body = new LinkedMultiValueMap&lt;&gt;();
+        body.add("codigoTabelaReferencia", getRefCode().toString());
+        body.add("codigoTipoVeiculo", String.valueOf(tipo));
+        return post("/ConsultarMarcas", body, List.class);
+    }
+}</pre>
+
+  <h3>Tratamento Global de Erros</h3>
+  <pre>@RestControllerAdvice
+public class GlobalExceptionHandler {
+
+    @ExceptionHandler(BusinessException.class)
+    public ResponseEntity&lt;Map&lt;String, String&gt;&gt; handleBusiness(BusinessException ex) {
+        return ResponseEntity.badRequest()
+            .body(Map.of("message", ex.getMessage()));
+    }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity&lt;Map&lt;String, String&gt;&gt; handleNotFound(ResourceNotFoundException ex) {
+        return ResponseEntity.status(404)
+            .body(Map.of("message", ex.getMessage()));
+    }
+}</pre>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     07 — MÉTODOS HTTP
+════════════════════════════════════════════════ -->
+<div class="section">
+  <p class="section-num">07 — Métodos HTTP</p>
+  <h1 class="section-title">GET · POST · PUT · DELETE</h1>
+  <p class="section-sub">CRUD completo implementado em 4 Controllers REST.</p>
+
+  <h3>VehicleController — Endpoints de Veículos</h3>
+  <pre>@RestController
+@RequestMapping("/api/v1/vehicles")
+public class VehicleController {
+
+    @GetMapping                          // GET  /api/v1/vehicles
+    public ResponseEntity&lt;List&lt;VehicleResponseDTO&gt;&gt; listAll() { ... }
+
+    @GetMapping("/{id}")                 // GET  /api/v1/vehicles/{id}
+    public ResponseEntity&lt;VehicleResponseDTO&gt; findById(@PathVariable Long id) { ... }
+
+    @GetMapping("/plate/{plate}")        // GET  /api/v1/vehicles/plate/ABC1D23
+    public ResponseEntity&lt;VehicleResponseDTO&gt; findByPlate(@PathVariable String plate) { ... }
+
+    @PostMapping                         // POST /api/v1/vehicles
+    public ResponseEntity&lt;VehicleResponseDTO&gt; create(@RequestBody @Valid VehicleRequestDTO dto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(vehicleService.create(dto));
+    }
+
+    @PutMapping("/{id}")                 // PUT  /api/v1/vehicles/{id}
+    public ResponseEntity&lt;VehicleResponseDTO&gt; update(
+            @PathVariable Long id, @RequestBody @Valid VehicleRequestDTO dto) { ... }
+
+    @DeleteMapping("/{id}")              // DELETE /api/v1/vehicles/{id}
+    public ResponseEntity&lt;Void&gt; delete(@PathVariable Long id) {
+        vehicleService.delete(id);
+        return ResponseEntity.noContent().build();   // HTTP 204
+    }
+}</pre>
+
+  <h3>Mapa Completo de Endpoints</h3>
+  <table class="req-table ep">
+    <thead><tr><th>Método</th><th>Endpoint</th><th>Função</th><th>Resposta</th></tr></thead>
+    <tbody>
+      <tr><td><span class="ep-method post">POST</span></td><td>/auth/register</td><td>Cadastrar usuário</td><td>201 + token JWT</td></tr>
+      <tr><td><span class="ep-method post">POST</span></td><td>/auth/login</td><td>Autenticar</td><td>200 + token JWT</td></tr>
+      <tr><td><span class="ep-method get">GET</span></td><td>/vehicles</td><td>Listar todos</td><td>200 + array</td></tr>
+      <tr><td><span class="ep-method get">GET</span></td><td>/vehicles/{id}</td><td>Buscar por ID</td><td>200 ou 404</td></tr>
+      <tr><td><span class="ep-method get">GET</span></td><td>/vehicles/plate/{plate}</td><td>Buscar por placa</td><td>200 ou 404</td></tr>
+      <tr><td><span class="ep-method post">POST</span></td><td>/vehicles</td><td>Cadastrar veículo</td><td>201</td></tr>
+      <tr><td><span class="ep-method put">PUT</span></td><td>/vehicles/{id}</td><td>Atualizar veículo</td><td>200</td></tr>
+      <tr><td><span class="ep-method del">DELETE</span></td><td>/vehicles/{id}</td><td>Excluir veículo</td><td>204</td></tr>
+      <tr><td><span class="ep-method get">GET</span></td><td>/vehicles/{id}/history</td><td>Listar eventos</td><td>200 + array</td></tr>
+      <tr><td><span class="ep-method post">POST</span></td><td>/vehicles/{id}/history</td><td>Adicionar evento</td><td>201</td></tr>
+      <tr><td><span class="ep-method del">DELETE</span></td><td>/vehicles/{id}/history/{hid}</td><td>Excluir evento</td><td>204</td></tr>
+      <tr><td><span class="ep-method get">GET</span></td><td>/vehicles/{id}/photos</td><td>Listar fotos</td><td>200 + array</td></tr>
+      <tr><td><span class="ep-method post">POST</span></td><td>/vehicles/{id}/photos</td><td>Upload de foto</td><td>201</td></tr>
+      <tr><td><span class="ep-method del">DELETE</span></td><td>/vehicles/{id}/photos/{pid}</td><td>Excluir foto</td><td>204</td></tr>
+      <tr><td><span class="ep-method get">GET</span></td><td>/fipe/marcas?tipo=1</td><td>Marcas FIPE</td><td>200 + array</td></tr>
+      <tr><td><span class="ep-method get">GET</span></td><td>/fipe/preco?tipo=1&amp;marca=22&amp;modelo=5&amp;ano=2020-1</td><td>Preço FIPE</td><td>200 + objeto</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     08 — OAS / SWAGGER
+════════════════════════════════════════════════ -->
+<div class="section">
+  <p class="section-num">08 — OAS</p>
+  <h1 class="section-title">OpenAPI Specification / Swagger</h1>
+  <p class="section-sub">Documentação automática e interativa de todos os endpoints da API.</p>
+
+  <p>O projeto utiliza o <strong>Springdoc OpenAPI</strong>, que gera automaticamente a documentação da API baseada nas anotações Spring dos Controllers. A documentação é acessível pelo navegador sem configuração adicional.</p>
+
+  <h3>Dependência (pom.xml)</h3>
+  <pre>&lt;dependency&gt;
+    &lt;groupId&gt;org.springdoc&lt;/groupId&gt;
+    &lt;artifactId&gt;springdoc-openapi-starter-webmvc-ui&lt;/artifactId&gt;
+    &lt;version&gt;2.6.0&lt;/version&gt;
+&lt;/dependency&gt;</pre>
+
+  <h3>URLs de Acesso</h3>
+  <table class="req-table">
+    <thead><tr><th>URL</th><th>Conteúdo</th></tr></thead>
+    <tbody>
+      <tr><td><code>http://localhost:8080/swagger-ui.html</code></td><td>Interface gráfica interativa (Swagger UI) — permite testar endpoints diretamente pelo browser</td></tr>
+      <tr><td><code>http://localhost:8080/api-docs</code></td><td>Especificação em JSON (OpenAPI 3.0) — pode ser importada no Postman ou Insomnia</td></tr>
+    </tbody>
+  </table>
+
+  <h3>O que o Swagger UI fornece</h3>
+  <ul>
+    <li>Lista todos os endpoints agrupados por Controller</li>
+    <li>Mostra os parâmetros de entrada (body, path, query)</li>
+    <li>Permite testar as requisições diretamente pelo navegador</li>
+    <li>Documenta os possíveis códigos de resposta (200, 201, 400, 401, 404)</li>
+    <li>Exibe o schema dos DTOs (objetos de entrada e saída)</li>
+  </ul>
+
+  <div class="infobox green">
+    <strong>OAS (OpenAPI Specification)</strong>
+    A OpenAPI Specification (OAS) é o padrão da indústria para documentar APIs REST. É o sucessor do Swagger 2.0. O Springdoc gera automaticamente um documento OAS 3.0 válido a partir das anotações do código, eliminando documentação manual desatualizada.
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     09 — MATURIDADE REST
+════════════════════════════════════════════════ -->
+<div class="section">
+  <p class="section-num">09 — Maturidade RESTful</p>
+  <h1 class="section-title">Richardson Maturity Model</h1>
+  <p class="section-sub">Modelo que classifica APIs REST em 4 níveis de maturidade.</p>
+
+  <p>O <strong>Richardson Maturity Model</strong> (criado por Leonard Richardson) define 4 níveis para classificar o quão "RESTful" uma API é. O AutoTrack BR foi implementado no <strong>Nível 2</strong>, que é o padrão adotado pela indústria.</p>
+
+  <div class="level-grid">
+    <div class="level-card">
+      <div class="level-num">0</div>
+      <div class="level-name">The Swamp of POX</div>
+      <div class="level-desc">Um único endpoint, tudo via POST. Sem recursos, sem verbos.</div>
+    </div>
+    <div class="level-card">
+      <div class="level-num">1</div>
+      <div class="level-name">Resources</div>
+      <div class="level-desc">URLs representam recursos distintos. Ex: /vehicles, /users.</div>
+    </div>
+    <div class="level-card active">
+      <div class="level-num" style="color:var(--primary)">2</div>
+      <div class="level-name">HTTP Verbs ← AutoTrack</div>
+      <div class="level-desc">GET, POST, PUT, DELETE com status codes corretos. Padrão da indústria.</div>
+    </div>
+    <div class="level-card">
+      <div class="level-num">3</div>
+      <div class="level-name">HATEOAS</div>
+      <div class="level-desc">Responses incluem links de navegação. Raramente usado na prática.</div>
+    </div>
+  </div>
+
+  <h3>Como o AutoTrack atende o Nível 2</h3>
+
+  <p><strong>✅ Recursos bem definidos (Level 1):</strong></p>
+  <pre>GET  /api/v1/vehicles          ← coleção de recursos
+GET  /api/v1/vehicles/{id}     ← recurso específico
+GET  /api/v1/vehicles/{id}/history  ← sub-recurso</pre>
+
+  <p><strong>✅ Verbos HTTP com semântica correta (Level 2):</strong></p>
+  <table class="req-table">
+    <thead><tr><th>Verbo</th><th>Operação</th><th>Status Code retornado</th><th>Idempotente?</th></tr></thead>
+    <tbody>
+      <tr><td>GET</td><td>Consultar / listar</td><td>200 OK</td><td>✅ Sim</td></tr>
+      <tr><td>POST</td><td>Criar novo recurso</td><td>201 Created</td><td>❌ Não</td></tr>
+      <tr><td>PUT</td><td>Atualizar recurso existente</td><td>200 OK</td><td>✅ Sim</td></tr>
+      <tr><td>DELETE</td><td>Remover recurso</td><td>204 No Content</td><td>✅ Sim</td></tr>
+    </tbody>
+  </table>
+
+  <p><strong>✅ Status Codes semânticos:</strong></p>
+  <pre>200 OK           → consulta bem-sucedida
+201 Created      → recurso criado com sucesso (POST)
+204 No Content   → exclusão bem-sucedida (DELETE)
+400 Bad Request  → dados inválidos ou regra de negócio violada
+401 Unauthorized → JWT ausente ou expirado
+404 Not Found    → veículo/evento não encontrado</pre>
+
+  <div class="infobox">
+    <strong>Por que Level 2 e não Level 3 (HATEOAS)?</strong>
+    O Level 3 exige que cada response inclua links para ações relacionadas (ex: ao retornar um veículo, incluir link para seu histórico). Na prática, isso é implementado por menos de 5% das APIs comerciais — incluindo Netflix, Stripe, GitHub e PayPal, que param no Level 2. O Level 2 é o padrão consolidado do mercado.
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     10 — INTEGRAÇÃO FIPE
+════════════════════════════════════════════════ -->
+<div class="section">
+  <p class="section-num">10 — Integração Externa</p>
+  <h1 class="section-title">Tabela FIPE</h1>
+  <p class="section-sub">Proxy Spring Boot para a API oficial de preços de veículos do governo brasileiro.</p>
+
+  <p>A <strong>Tabela FIPE</strong> (Fundação Instituto de Pesquisas Econômicas) é a referência oficial de preços de veículos no Brasil, usada por seguradoras, bancos e concessionárias. O AutoTrack integra essa tabela para fornecer o valor de mercado atualizado de cada veículo.</p>
+
+  <h3>Por que um Proxy no Backend?</h3>
+  <p>A API da FIPE bloqueia requisições diretas de navegadores por segurança (política CORS). A solução é criar um proxy no Spring Boot que:</p>
+  <ol>
+    <li>Recebe a requisição do React</li>
+    <li>Repassa para a API da FIPE com os headers corretos (Referer)</li>
+    <li>Retorna a resposta ao frontend</li>
+  </ol>
+
+  <h3>Implementação do Proxy (FipeService.java)</h3>
+  <pre>@Service
+public class FipeService {
+
+    private static final String FIPE_BASE = "https://veiculos.fipe.org.br/api/veiculos";
+    private final RestTemplate restTemplate = new RestTemplate();
+
+    // Cache de 12h do código de referência (muda mensalmente)
+    private Integer cachedRefCode;
+    private LocalDateTime cacheTime;
+
+    private HttpHeaders buildHeaders() {
+        HttpHeaders h = new HttpHeaders();
+        h.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        h.set("Referer", "https://veiculos.fipe.org.br/");  // header obrigatório
+        return h;
+    }
+
+    public List&lt;Map&lt;String, Object&gt;&gt; getMarcas(int tipo) {
+        MultiValueMap&lt;String, String&gt; body = new LinkedMultiValueMap&lt;&gt;();
+        body.add("codigoTabelaReferencia", getRefCode().toString());
+        body.add("codigoTipoVeiculo", String.valueOf(tipo));  // 1=carro, 2=moto, 3=caminhão
+        return post("/ConsultarMarcas", body, List.class);
+    }
+
+    public Map&lt;String, Object&gt; getPreco(int tipo, int marca, int modelo, String ano) {
+        MultiValueMap&lt;String, String&gt; body = new LinkedMultiValueMap&lt;&gt;();
+        body.add("codigoTabelaReferencia", getRefCode().toString());
+        body.add("codigoTipoVeiculo",      String.valueOf(tipo));
+        body.add("codigoMarca",            String.valueOf(marca));
+        body.add("codigoModelo",           String.valueOf(modelo));
+        body.add("ano",                    ano);
+        body.add("tipoPesquisa",           "2");
+        return post("/ConsultarValorComTodosParametros", body, Map.class);
+    }
+}</pre>
+
+  <h3>Fluxo de Consulta no Frontend (FipeSearch.js)</h3>
+  <p>A interface guia o usuário em 4 seleções em cascata até obter o preço:</p>
+  <pre>1. Selecionar Tipo   → GET /api/v1/fipe/marcas?tipo=1
+2. Selecionar Marca  → GET /api/v1/fipe/modelos?tipo=1&marca=22
+3. Selecionar Modelo → GET /api/v1/fipe/anos?tipo=1&marca=22&modelo=5
+4. Selecionar Ano    → GET /api/v1/fipe/preco?tipo=1&marca=22&modelo=5&ano=2020-1
+
+Resposta final (exemplo):
+{
+  "Valor":        "R$ 45.138,00",
+  "Marca":        "Volkswagen",
+  "Modelo":       "Gol 1.0 12v",
+  "AnoModelo":    2020,
+  "Combustivel":  "Gasolina",
+  "CodigoFipe":   "005004-2",
+  "MesReferencia": "junho de 2026"
+}</pre>
+
+  <div class="infobox green">
+    <strong>Dados salvos no banco</strong>
+    Ao confirmar a consulta FIPE, o código (<code>fipe_code</code>), preço (<code>fipe_price</code>) e mês de referência (<code>fipe_reference</code>) são salvos no registro do veículo — adicionados via migration V4. Isso cria um histórico de quando o valor foi registrado.
+  </div>
+
+  <div class="footer">
+    <span>AutoTrack BR — Documentação Técnica</span>
+    <span>Java 21 · Spring Boot 3.3.5 · React 19 · MySQL 8</span>
+    <span>Junho 2026</span>
+  </div>
+</div>
+
+</body>
+</html>
